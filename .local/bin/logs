@@ -1,0 +1,20 @@
+#!/bin/sh
+# Быстрый просмотр логов: logs net | logs niri | logs kernel
+case "$1" in
+    net)
+        exec tail -n 200 -f "$HOME/.local/share/net-watch/net.log"
+        ;;
+    niri)
+        exec tail -n 200 -f "$HOME/.local/state/niri/session.log"
+        ;;
+    sway)
+        exec tail -n 200 -f "$HOME/.local/state/sway/session.log"
+        ;;
+    kernel)
+        exec sudo tail -n 200 -f /var/log/dmesg-live.log
+        ;;
+    *)
+        echo "Использование: logs net | logs niri | logs kernel"
+        exit 1
+        ;;
+esac

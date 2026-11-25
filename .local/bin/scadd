@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+MUSIC_DIR="${MUSIC_DIR:-$HOME/Music}"
+
+if [[ $# -eq 0 || "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  echo "Usage: scadd <soundcloud-url> [...]"
+  exit 1
+fi
+
+for cmd in yt-dlp mpc; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo "scadd: missing required command: $cmd" >&2
+    exit 1
+  fi
+done
+
+mkdir -p "$MUSIC_DIR"
+
+added_files=()
+while IFS= read -r filepath; do
+  [[ -n "$filepath" ]] && added_files+=("$filepath")
+done < <(
+  yt-dlp \
+    --ignore-errors \
+    --no-overwrites \
+    -x --audio-format mp3 --audio-quality 0 \
+    --embed-metadata --embed-thumbnail \
+    --print after_move:filepath \
+    -P "$MUSIC_DIR" \
+    -o "%(uploader)s - %(title)s.%(ext)s" \
+    "$@"
+)
+
+mpc update --wait >/dev/null
+
+if [[ ${#added_files[@]} -eq 0 ]]; then
+  echo "scadd: no new tracks downloaded (already exists or failed)." >&2
+  exit 0
+fi
+
+start_pos=$(( $(mpc playlist | wc -l) + 1 ))
+added_any=0
+
+for full_path in "${added_files[@]}"; do
+  rel_path="${full_path#"$MUSIC_DIR"/}"
+  if mpc add "$rel_path" 2>/dev/null; then
+    echo "Added: $rel_path"
+    added_any=1
+  else
+    echo "scadd: failed to add to mpd queue: $rel_path" >&2
+  fi
+done
+
+if [[ $added_any -eq 1 ]]; then
+  mpc play "$start_pos" >/dev/null
+  mpc status
+fi

@@ -1,0 +1,77 @@
+/* Зелёный лесной минимализм — палитра из обоев wallhaven-oxoqp9 */
+@define-color accent #8a9164;
+@define-color fg #d8d3c2;
+@define-color bg #101410;
+@define-color bg-alt #252d20;
+@define-color muted #6b7560;
+@define-color urgent #b5654a;
+
+* {
+    font-family: "CozetteVector", "Symbols Nerd Font Mono", monospace;
+    font-size: 14px;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+    transition: color 200ms ease, background-color 200ms ease;
+}
+
+window#waybar {
+    background-color: @bg;
+    color: @fg;
+    border-bottom: 1px solid @bg-alt;
+}
+
+#workspaces {
+    border-bottom: 1px solid @bg-alt;
+}
+
+#workspaces button {
+    padding: 6px 12px;
+    color: @fg;
+    background: transparent;
+    border: none;
+}
+
+#workspaces button:hover {
+    color: @accent;
+    background: transparent;
+}
+
+#workspaces button.focused {
+    color: @accent;
+    font-weight: bold;
+}
+
+#workspaces button.urgent {
+    color: @urgent;
+}
+
+#mpris {
+    color: @fg;
+    margin-left: 6px;
+}
+
+#mode,
+#custom-clock,
+#language,
+#custom-volume,
+#cpu,
+#memory,
+#tray {
+    padding: 0 10px;
+}
+
+#custom-clock {
+    color: @fg;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#custom-volume.muted {
+    color: @urgent;
+}
+
+#tray {
+    padding-left: 6px;
+    padding-right: 8px;
+}

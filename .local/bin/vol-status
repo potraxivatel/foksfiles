@@ -1,0 +1,17 @@
+#!/bin/sh
+# Статус громкости для waybar (PipeWire / wpctl).
+if ! wpctl status >/dev/null 2>&1; then
+    echo '{"text":"—","tooltip":"PipeWire не запущен"}'
+    exit 0
+fi
+
+OUT="$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null)" || {
+    echo '{"text":"—","tooltip":"нет аудио"}'
+    exit 0
+}
+VOL="$(printf '%s\n' "$OUT" | awk '{print $2}')"
+PCT="$(awk -v v="${VOL:-0}" 'BEGIN { printf "%d", v * 100 }')"
+case "$OUT" in
+    *MUTED*) echo "{\"text\":\"mute\",\"tooltip\":\"mute\"}" ;;
+    *)       echo "{\"text\":\"$PCT%\",\"tooltip\":\"volume $PCT%\"}" ;;
+esac

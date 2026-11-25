@@ -1,0 +1,60 @@
+#!/bin/sh
+# Скриншоты для niri (Wayland).
+#
+#   screenshot region   — выделить область мышью (по умолчанию)
+#   screenshot full     — весь экран (все мониторы)
+#   screenshot edit     — выделить область и открыть в swappy
+#                         (стрелки, текст, размытие)
+#
+# Картинка кладётся в ~/Pictures/Screenshots и сразу в буфер обмена.
+# Путь печатается в stdout — удобно использовать в скриптах.
+
+DIR="${XDG_PICTURES_DIR:-$HOME/Pictures}/Screenshots"
+mkdir -p "$DIR"
+
+NAME="$(date +%Y-%m-%d_%H-%M-%S)"
+FILE="$DIR/$NAME.png"
+
+copy() {
+    # Явно объявляем image/png: без --type wl-copy отдаёт только текстовые
+    # типы, и картинка вставляется в приложения как мусорные байты.
+    wl-copy --type image/png <"$1" 2>/dev/null || true
+}
+
+notify() {
+    notify-send -a "Скриншот" -i "$1" "Скриншот сохранён" "$1" 2>/dev/null || true
+}
+
+case "${1:-region}" in
+    region)
+        geom="$(slurp 2>/dev/null)" || exit 0
+        [ -z "$geom" ] && exit 0
+        grim -g "$geom" "$FILE" || exit 1
+        copy "$FILE"
+        notify "$FILE"
+        echo "$FILE"
+        ;;
+    full)
+        grim "$FILE" || exit 1
+        copy "$FILE"
+        notify "$FILE"
+        echo "$FILE"
+        ;;
+    edit)
+        geom="$(slurp 2>/dev/null)" || exit 0
+        [ -z "$geom" ] && exit 0
+        tmp="$(mktemp -t screenshot-XXXXXX.png)"
+        grim -g "$geom" "$tmp" || exit 1
+        swappy -f "$tmp" -o "$FILE" >/dev/null 2>&1
+        rm -f "$tmp"
+        if [ -f "$FILE" ]; then
+            copy "$FILE"
+            notify "$FILE"
+            echo "$FILE"
+        fi
+        ;;
+    *)
+        echo "использование: $0 [region|full|edit]" >&2
+        exit 2
+        ;;
+esac

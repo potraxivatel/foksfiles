@@ -1,0 +1,76 @@
+#!/bin/sh
+# Запуск звукового стека PipeWire (идемпотентно).
+#
+#   ~/.local/bin/audio          — запустить, если ещё не запущено
+#   ~/.local/bin/audio status   — показать состояние
+#   ~/.local/bin/audio restart  — перезапустить
+#
+# Схема: pipewire (сервер) + wireplumber (менеджер сессии) + pipewire-pulse
+# (совместимость с PulseAudio, чтобы работали Firefox, pavucontrol и т.д.).
+
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+
+LOG_DIR="$HOME/.local/state/audio"
+LOG="$LOG_DIR/pipewire.log"
+mkdir -p "$LOG_DIR"
+
+running() {
+    pgrep -x "$1" >/dev/null 2>&1
+}
+
+start_all() {
+    # pipewire — первым: остальные подключаются к нему.
+    if ! running pipewire; then
+        pipewire >>"$LOG" 2>&1 &
+        sleep 0.5
+    fi
+    if ! running wireplumber; then
+        wireplumber >>"$LOG" 2>&1 &
+        sleep 0.5
+    fi
+    if ! running pipewire-pulse; then
+        pipewire-pulse >>"$LOG" 2>&1 &
+        sleep 0.5
+    fi
+}
+
+case "${1:-start}" in
+    start)
+        start_all
+        ;;
+    restart)
+        pkill -x pipewire-pulse 2>/dev/null
+        pkill -x wireplumber 2>/dev/null
+        pkill -x pipewire 2>/dev/null
+        sleep 1
+        start_all
+        ;;
+    stop)
+        pkill -x pipewire-pulse 2>/dev/null
+        pkill -x wireplumber 2>/dev/null
+        pkill -x pipewire 2>/dev/null
+        exit 0
+        ;;
+    status)
+        ;;
+    *)
+        echo "использование: $0 [start|restart|stop|status]" >&2
+        exit 2
+        ;;
+esac
+
+echo "--- процессы ---"
+for p in pipewire pipewire-pulse wireplumber; do
+    if running "$p"; then echo "  $p: работает"; else echo "  $p: НЕ работает"; fi
+done
+
+echo "--- устройства вывода ---"
+if running pipewire-pulse; then
+    pactl info 2>/dev/null | sed -n 's/^Server Name: /  сервер: /p'
+    pactl list short sinks 2>/dev/null | while read -r id name _ _ desc; do
+        echo "  [$id] $name — $desc"
+    done
+    echo "--- громкость по умолчанию ---"
+    pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | head -1
+    pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null
+fi

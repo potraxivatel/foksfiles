@@ -1,0 +1,5 @@
+#!/bin/sh
+# Запуск waybar без дублей: перед стартом убиваем старый экземпляр.
+pkill -x waybar 2>/dev/null
+sleep 0.2
+exec waybar

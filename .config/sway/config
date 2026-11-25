@@ -1,0 +1,515 @@
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+
+# Русская раскладка: us/ru, переключение по Alt+Shift, Caps Lock → Esc
+input * {
+    xkb_layout "us,ru"
+    xkb_options "grp:alt_shift_toggle,caps:escape"
+}
+
+# Монитор: 1920x1080 @ 100 Гц + обои
+output HDMI-A-1 {
+    mode 1920x1080@100Hz
+    bg /home/void/.local/share/wallpapers/wallhaven-oxoqp9.png fill
+}
+
+exec_always /home/void/.local/bin/waybar-start
+exec_always /home/void/.local/bin/audio-start
+
+# Шрифт заголовков окон
+font "CozetteVector 12"
+
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+# Your preferred terminal emulator
+set $term foot
+# Your preferred application launcher
+set $menu wmenu-run
+
+### Output configuration
+#
+# Обои (дефолтный фон sway отключён)
+output * bg /home/void/.local/share/wallpapers/wallhaven-oxoqp9.png fill
+#
+# Example configuration:
+#
+#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+
+### Idle configuration
+#
+# Example configuration:
+#
+# exec swayidle -w \
+#          timeout 300 'swaylock -f -c 000000' \
+#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+#          before-sleep 'swaylock -f -c 000000'
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+### Input configuration
+#
+# Example configuration:
+#
+#   input type:touchpad {
+#       dwt enabled
+#       tap enabled
+#       natural_scroll enabled
+#       middle_emulation enabled
+#   }
+#
+#   input type:keyboard {
+#       xkb_layout "eu"
+#   }
+#
+# You can also configure each device individually.
+# Read `man 5 sway-input` for more information about this section.
+
+### Key bindings
+#
+# Basics:
+#
+    # Start a terminal
+    # bindsym $mod+Return exec $term
+
+    # Kill focused window
+    # bindsym $mod+Shift+q kill
+
+    # Start your launcher
+    # bindsym $mod+d exec $menu
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # Reload the configuration file
+    # bindsym $mod+Shift+c reload
+
+    # Exit sway (logs you out of your Wayland session)
+    # bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+#
+# Moving around:
+#
+    # Move your focus around
+    # bindsym $mod+$left focus left
+    # bindsym $mod+$down focus down
+    # bindsym $mod+$up focus up
+    # bindsym $mod+$right focus right
+    # Or use $mod+[up|down|left|right]
+    # bindsym $mod+Left focus left
+    # bindsym $mod+Down focus down
+    # bindsym $mod+Up focus up
+    # bindsym $mod+Right focus right
+
+    # Move the focused window with the same, but add Shift
+    # bindsym $mod+Shift+$left move left
+    # bindsym $mod+Shift+$down move down
+    # bindsym $mod+Shift+$up move up
+    # bindsym $mod+Shift+$right move right
+    # Ditto, with arrow keys
+    # bindsym $mod+Shift+Left move left
+    # bindsym $mod+Shift+Down move down
+    # bindsym $mod+Shift+Up move up
+    # bindsym $mod+Shift+Right move right
+#
+# Workspaces:
+#
+    # Switch to workspace
+    # bindsym $mod+1 workspace number 1
+    # bindsym $mod+2 workspace number 2
+    # bindsym $mod+3 workspace number 3
+    # bindsym $mod+4 workspace number 4
+    # bindsym $mod+5 workspace number 5
+    # bindsym $mod+6 workspace number 6
+    # bindsym $mod+7 workspace number 7
+    # bindsym $mod+8 workspace number 8
+    # bindsym $mod+9 workspace number 9
+    # bindsym $mod+0 workspace number 10
+    # Move focused container to workspace
+    # bindsym $mod+Shift+1 move container to workspace number 1
+    # bindsym $mod+Shift+2 move container to workspace number 2
+    # bindsym $mod+Shift+3 move container to workspace number 3
+    # bindsym $mod+Shift+4 move container to workspace number 4
+    # bindsym $mod+Shift+5 move container to workspace number 5
+    # bindsym $mod+Shift+6 move container to workspace number 6
+    # bindsym $mod+Shift+7 move container to workspace number 7
+    # bindsym $mod+Shift+8 move container to workspace number 8
+    # bindsym $mod+Shift+9 move container to workspace number 9
+    # bindsym $mod+Shift+0 move container to workspace number 10
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    # bindsym $mod+b splith
+    # bindsym $mod+v splitv
+
+    # Switch the current container between different layout styles
+    # bindsym $mod+s layout stacking
+    # bindsym $mod+w layout tabbed
+    # bindsym $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    # bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    # bindsym $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    # bindsym $mod+space focus mode_toggle
+
+    # Move focus to the parent container
+    # bindsym $mod+a focus parent
+#
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    # bindsym $mod+Shift+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    # bindsym $mod+minus scratchpad show
+#
+# Resizing containers:
+#
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    # bindsym $left resize shrink width 10px
+    # bindsym $down resize grow height 10px
+    # bindsym $up resize shrink height 10px
+    # bindsym $right resize grow width 10px
+
+    # Ditto, with arrow keys
+    # bindsym Left resize shrink width 10px
+    # bindsym Down resize grow height 10px
+    # bindsym Up resize shrink height 10px
+    # bindsym Right resize grow width 10px
+
+    # Return to default mode
+    # bindsym Return mode "default"
+    # bindsym Escape mode "default"
+}
+# bindsym $mod+r mode "resize"
+#
+# Utilities:
+#
+    # Special keys to adjust volume via PulseAudio
+    # bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
+    # bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
+    # bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
+    # bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+
+    # Special keys to control media via playerctl
+    # bindsym --locked XF86AudioPlay exec playerctl play-pause
+    # bindsym --locked XF86AudioPause exec playerctl play-pause
+    # bindsym --locked XF86AudioPrev exec playerctl previous
+    # bindsym --locked XF86AudioNext exec playerctl next
+    # bindsym --locked XF86AudioStop exec playerctl stop
+
+    # Special keys to adjust brightness via brightnessctl
+    # bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+    # bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+
+    # Special key to take a screenshot with grim
+    # bindsym Print exec grim
+
+#
+# Status Bar:
+#
+# Read `man 5 sway-bar` for more information about this section.
+# bar {
+#     position top
+# 
+#     # When the status_command prints a new line to stdout, swaybar updates.
+#     # The default just shows the current date and time.
+#     status_command while date +'%Y-%m-%d %X'; do sleep 1; done
+# 
+#     colors {
+#         statusline #ffffff
+#         background #323232
+#         inactive_workspace #32323200 #32323200 #5c5c5c
+#     }
+# }
+
+include /etc/sway/config.d/*
+
+# Цвета окон из noctalia
+include /home/void/.config/sway/noctalia
+
+# ── Кейбинды, перенесённые из niri ───────────────────────────────
+set $launcher /home/void/.local/bin/noctalia
+
+# Приложения
+bindsym $mod+q exec kitty
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_shorti exec kitty
+bindsym $mod+Shift+t exec foot
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_E exec foot
+bindsym $mod+e exec /home/void/.local/bin/dolphin
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_u exec /home/void/.local/bin/dolphin
+bindsym $mod+b exec firefox
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_i exec firefox
+bindsym $mod+d exec $launcher msg panel-toggle launcher
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_ve exec $launcher msg panel-toggle launcher
+bindsym $mod+n exec $launcher msg panel-toggle control-center
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_te exec $launcher msg panel-toggle control-center
+bindsym $mod+space exec $launcher msg panel-toggle session
+bindsym $mod+Alt+l exec swaylock
+# алиас для русской раскладки
+bindsym $mod+Alt+Cyrillic_de exec swaylock
+bindsym $mod+Alt+v exec $launcher msg panel-toggle clipboard
+# алиас для русской раскладки
+bindsym $mod+Alt+Cyrillic_em exec $launcher msg panel-toggle clipboard
+bindsym $mod+Alt+b exec $launcher msg panel-toggle wallpaper
+# алиас для русской раскладки
+bindsym $mod+Alt+Cyrillic_i exec $launcher msg panel-toggle wallpaper
+bindsym $mod+Alt+s exec sh -c 'pkill orca || exec orca'
+# алиас для русской раскладки
+bindsym $mod+Alt+Cyrillic_yeru exec sh -c 'pkill orca || exec orca'
+
+# Сервисные
+bindsym $mod+Shift+slash reload
+bindsym $mod+Shift+F12 exec foot -e /home/void/.local/bin/logs sway
+bindsym $mod+Shift+F11 exec foot -e /home/void/.local/bin/logs net
+bindsym $mod+Shift+p exec swaymsg output '*' dpms off
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_ZE exec swaymsg output '*' dpms off
+
+# Скриншоты (grim + slurp, скрипт compositor-agnostic)
+bindsym $mod+w exec /home/void/.local/bin/screenshot region
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_tse exec /home/void/.local/bin/screenshot region
+bindsym $mod+Shift+w exec /home/void/.local/bin/screenshot full
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_TSE exec /home/void/.local/bin/screenshot full
+bindsym $mod+Alt+w exec /home/void/.local/bin/screenshot edit
+# алиас для русской раскладки
+bindsym $mod+Alt+Cyrillic_tse exec /home/void/.local/bin/screenshot edit
+bindsym Print exec /home/void/.local/bin/screenshot full
+bindsym Ctrl+Print exec /home/void/.local/bin/screenshot full
+bindsym Alt+Print exec /home/void/.local/bin/screenshot region
+
+# Закрыть окно: Mod+Z — принудительно (kill), Mod+Shift+Z — мягко (close)
+bindsym $mod+z kill
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_ya kill
+bindsym $mod+Shift+z close
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_YA close
+bindsym $mod+Shift+q kill
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_SHORTI kill
+
+# Выход из sway
+bindsym $mod+Shift+e exec swaymsg exit
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_U exec swaymsg exit
+bindsym Ctrl+Alt+Delete exec swaymsg exit
+
+# Фокус: стрелки и hjkl
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+bindsym $mod+h focus left
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_er focus left
+bindsym $mod+j focus down
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_o focus down
+bindsym $mod+k focus up
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_el focus up
+bindsym $mod+l focus right
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_de focus right
+bindsym $mod+Home focus left
+bindsym $mod+End focus right
+
+# Перемещение окна: Mod+Ctrl + стрелки/hjkl
+bindsym $mod+Ctrl+Left move left
+bindsym $mod+Ctrl+Down move down
+bindsym $mod+Ctrl+Up move up
+bindsym $mod+Ctrl+Right move right
+bindsym $mod+Ctrl+h move left
+# алиас для русской раскладки
+bindsym $mod+Ctrl+Cyrillic_er move left
+bindsym $mod+Ctrl+j move down
+# алиас для русской раскладки
+bindsym $mod+Ctrl+Cyrillic_o move down
+bindsym $mod+Ctrl+k move up
+# алиас для русской раскладки
+bindsym $mod+Ctrl+Cyrillic_el move up
+bindsym $mod+Ctrl+l move right
+# алиас для русской раскладки
+bindsym $mod+Ctrl+Cyrillic_de move right
+bindsym $mod+Ctrl+Home move left
+bindsym $mod+Ctrl+End move right
+
+# Фокус между мониторами
+bindsym $mod+Shift+Left focus output left
+bindsym $mod+Shift+Down focus output down
+bindsym $mod+Shift+Up focus output up
+bindsym $mod+Shift+Right focus output right
+bindsym $mod+Shift+h focus output left
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_ER focus output left
+bindsym $mod+Shift+j focus output down
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_O focus output down
+bindsym $mod+Shift+k focus output up
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_EL focus output up
+bindsym $mod+Shift+l focus output right
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_DE focus output right
+
+# Переместить окно на другой монитор
+bindsym $mod+Shift+Ctrl+Left move container to output left
+bindsym $mod+Shift+Ctrl+Down move container to output down
+bindsym $mod+Shift+Ctrl+Up move container to output up
+bindsym $mod+Shift+Ctrl+Right move container to output right
+bindsym $mod+Shift+Ctrl+h move container to output left
+# алиас для русской раскладки
+bindsym $mod+Shift+Ctrl+Cyrillic_ER move container to output left
+bindsym $mod+Shift+Ctrl+j move container to output down
+# алиас для русской раскладки
+bindsym $mod+Shift+Ctrl+Cyrillic_O move container to output down
+bindsym $mod+Shift+Ctrl+k move container to output up
+# алиас для русской раскладки
+bindsym $mod+Shift+Ctrl+Cyrillic_EL move container to output up
+bindsym $mod+Shift+Ctrl+l move container to output right
+# алиас для русской раскладки
+bindsym $mod+Shift+Ctrl+Cyrillic_DE move container to output right
+
+# Воркспейсы: Page_Up/Down и u/i
+bindsym $mod+Page_Down workspace next
+bindsym $mod+Page_Up workspace prev
+bindsym $mod+u workspace next
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_ghe workspace next
+bindsym $mod+i workspace prev
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_sha workspace prev
+bindsym $mod+Ctrl+Page_Down move container to workspace next
+bindsym $mod+Ctrl+Page_Up move container to workspace prev
+bindsym $mod+Ctrl+u move container to workspace next
+# алиас для русской раскладки
+bindsym $mod+Ctrl+Cyrillic_ghe move container to workspace next
+bindsym $mod+Ctrl+i move container to workspace prev
+# алиас для русской раскладки
+bindsym $mod+Ctrl+Cyrillic_sha move container to workspace prev
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+Ctrl+1 move container to workspace number 1
+bindsym $mod+Ctrl+2 move container to workspace number 2
+bindsym $mod+Ctrl+3 move container to workspace number 3
+bindsym $mod+Ctrl+4 move container to workspace number 4
+bindsym $mod+Ctrl+5 move container to workspace number 5
+bindsym $mod+Ctrl+6 move container to workspace number 6
+bindsym $mod+Ctrl+7 move container to workspace number 7
+bindsym $mod+Ctrl+8 move container to workspace number 8
+bindsym $mod+Ctrl+9 move container to workspace number 9
+
+# Размеры окон вместо niri-пресетов ширины/высоты
+bindsym $mod+minus resize shrink width 10px
+bindsym $mod+equal resize grow width 10px
+bindsym $mod+Shift+minus resize shrink height 10px
+bindsym $mod+Shift+equal resize grow height 10px
+
+# Scratchpad: спрятать окно / вернуть
+bindsym $mod+Shift+m move scratchpad
+bindsym $mod+Shift+Cyrillic_SOFTSIGN move scratchpad
+bindsym $mod+m scratchpad show
+bindsym $mod+Cyrillic_softsign scratchpad show
+
+# Десятый воркспейс
+bindsym $mod+0 workspace number 10
+bindsym $mod+Ctrl+0 move container to workspace number 10
+
+# Состояния окон
+bindsym $mod+f fullscreen toggle
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_a fullscreen toggle
+bindsym $mod+Shift+f fullscreen toggle global
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_A fullscreen toggle global
+bindsym $mod+t floating toggle
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_e floating toggle
+bindsym $mod+Shift+v floating toggle
+# алиас для русской раскладки
+bindsym $mod+Shift+Cyrillic_EM floating toggle
+bindsym $mod+v layout tabbed
+# алиас для русской раскладки
+bindsym $mod+Cyrillic_em layout tabbed
+
+# Громкость / медиа / яркость (работают и под блокировкой)
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.03+ -l 1.0
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.03-
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+bindsym --locked XF86AudioPlay exec playerctl play-pause
+bindsym --locked XF86AudioStop exec playerctl stop
+bindsym --locked XF86AudioPrev exec playerctl previous
+bindsym --locked XF86AudioNext exec playerctl next
+bindsym --locked XF86MonBrightnessUp exec brightnessctl --class=backlight set +10%
+bindsym --locked XF86MonBrightnessDown exec brightnessctl --class=backlight set 10%-
+
+# ── Зелёный райс (поверх noctalia) ──────────────────────────────
+gaps inner 8
+gaps outer 4
+default_border pixel 2
+hide_edge_borders smart
+
+set $green      #8a9164
+set $green-dim  #4a5540
+set $dark       #101410
+set $text       #d8d3c2
+set $muted      #8d9483
+set $urgent     #b5654a
+
+client.focused          $green      $dark  $text   $green      $green
+client.focused_inactive $green-dim  $dark  $muted  $green-dim  $green-dim
+client.unfocused        $green-dim  $dark  $muted  $green-dim  $green-dim
+client.urgent           $urgent     $dark  $text   $urgent     $urgent
+client.placeholder      $dark       $dark  $text   $dark       $dark
+client.background       $dark

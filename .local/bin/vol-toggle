@@ -1,0 +1,7 @@
+#!/bin/sh
+# Клик по модулю громкости в waybar.
+LOG="$HOME/.local/state/audio/clicks.log"
+mkdir -p "$(dirname "$LOG")"
+echo "=== $(date '+%F %T') click ===" >>"$LOG"
+wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle >>"$LOG" 2>&1
+wpctl get-volume @DEFAULT_AUDIO_SINK@ >>"$LOG" 2>&1

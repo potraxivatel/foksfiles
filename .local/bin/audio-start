@@ -1,0 +1,45 @@
+#!/bin/sh
+# Запуск PipeWire + WirePlumber + pipewire-pulse + MPD в пользовательской сессии.
+# Вызывается из sway-конфига через exec_always.
+
+RT="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+LOG="$HOME/.local/state/audio"
+mkdir -p "$LOG"
+
+if ! pgrep -x pipewire >/dev/null 2>&1; then
+    pipewire >"$LOG/pipewire.log" 2>&1 &
+fi
+
+# Ждём сокет, чтобы wireplumber не стартовал раньше pipewire.
+i=0
+while [ ! -S "$RT/pipewire-0" ] && [ "$i" -lt 25 ]; do
+    sleep 0.2
+    i=$((i + 1))
+done
+
+if ! pgrep -x wireplumber >/dev/null 2>&1; then
+    wireplumber >"$LOG/wireplumber.log" 2>&1 &
+fi
+
+if ! pgrep -x pipewire-pulse >/dev/null 2>&1; then
+    pipewire-pulse >"$LOG/pipewire-pulse.log" 2>&1 &
+fi
+
+# Ждём, пока wireplumber поднимет хотя бы один аудио-синк.
+j=0
+while ! wpctl inspect @DEFAULT_AUDIO_SINK@ >/dev/null 2>&1 && [ "$j" -lt 15 ]; do
+    sleep 0.2
+    j=$((j + 1))
+done
+
+# На Void без сервиса alsa каналы на встроенной карте могут сбрасываться в mute.
+if command -v amixer >/dev/null 2>&1; then
+    amixer -c PCH set Master unmute >/dev/null 2>&1 || true
+    amixer -c PCH set Front unmute >/dev/null 2>&1 || true
+    amixer -c PCH set Headphone unmute >/dev/null 2>&1 || true
+fi
+
+# Запускаем mpd уже после готовности pipewire и wireplumber.
+if command -v mpd >/dev/null 2>&1 && ! pgrep -x mpd >/dev/null 2>&1; then
+    mpd >"$LOG/mpd.log" 2>&1
+fi

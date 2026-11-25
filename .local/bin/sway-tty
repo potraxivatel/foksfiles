@@ -1,0 +1,22 @@
+#!/bin/sh
+# Запуск Sway с текстовой консоли (после обычного логина).
+# Вызывается из ~/.bash_profile на tty1.
+#
+# Лог: ~/.local/state/sway/session.log (предыдущий — session.log.prev)
+
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+export XDG_SESSION_TYPE=wayland
+export XDG_CURRENT_DESKTOP=sway
+export XCURSOR_THEME="${XCURSOR_THEME:-Adwaita}"
+export XCURSOR_SIZE="${XCURSOR_SIZE:-24}"
+
+LOG="$HOME/.local/state/sway/session.log"
+mkdir -p "$(dirname "$LOG")"
+[ -f "$LOG" ] && mv -f "$LOG" "$LOG.prev"
+
+echo "=== $(date '+%F %T') tty=$(tty) kernel=$(uname -r) ===" >>"$LOG"
+
+# Сбрасываем лог на диск, пока живёт Sway ($$ остаётся его pid после exec).
+( while kill -0 $$ 2>/dev/null; do sync; sleep 2; done ) &
+
+exec dbus-run-session -- sway >>"$LOG" 2>&1
